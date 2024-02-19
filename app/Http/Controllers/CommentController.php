@@ -39,7 +39,7 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {   
-        dd($request->all());
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'user_name' => 'required|regex:/^[a-zA-Z0-9]+$/',
             'email' => 'required|email',
@@ -59,24 +59,11 @@ class CommentController extends Controller
             
             // Получаем оригинальное имя файла
             $fileName = $file->getClientOriginalName();
-            $filePath = $file->storeAs('public', $fileName);
+            $filePath = $file->storeAs('storage', $fileName);
 
             // Получаем расширение файла
             $fileExtension = $file->getClientOriginalExtension();
             
-            // if(!$fileExtension === 'txt') {
-            //     $fullFilePath = storage_path('app/'.$filePath);
-            //     $image = Image::make($fullFilePath);
-            //     if ($image->width() > 320 || $image->height() > 240) {
-            //         // Уменьшаем размер изображения до максимальных значений 320x240 пикселей
-            //         $image->resize(320, 240, function ($constraint) {
-            //             $constraint->aspectRatio(); // Поддерживаем пропорции изображения
-            //             $constraint->upsize(); // Не увеличиваем размер, если изначальный меньше указанных размеров
-            //         });
-            //         // Сохраняем измененное изображение
-            //         $image->save($fullFilePath);
-            //     }
-            // }
         }
 
         $user = User::where('email', $request->email)->first();
@@ -91,7 +78,6 @@ class CommentController extends Controller
             } else {
                 $user->image = $filePath;
             }
-            $user->homepage = $request->home_page;
             $user->save();
         }
 

@@ -38,11 +38,24 @@ class ReplyController extends Controller
             'home_page' => 'nullable|url',
             'text' => ['required', 'not_regex:/<(?!\/?(a|code|i|strong)\b)[^>]*>/'],
             'captcha' => 'required|captcha',
-            // 'image_or_file' => 'nullable|file|mimes:jpeg,png,gif,txt|max:1024',
+            'image_or_file' => 'nullable|file|mimes:jpeg,png,gif,txt|max:1024',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        if ($request->hasFile('image_or_file')) {
+            // Получаем файл из запроса
+            $file = $request->file('image_or_file');
+            
+            // Получаем оригинальное имя файла
+            $fileName = $file->getClientOriginalName();
+            $filePath = $file->storeAs('public', $fileName);
+
+            // Получаем расширение файла
+            $fileExtension = $file->getClientOriginalExtension();
+            
         }
 
         $user = User::where('email', $request->email)->first();
@@ -52,6 +65,11 @@ class ReplyController extends Controller
             $user->name = $request->user_name;
             $user->email = $request->email;
             $user->homepage = $request->home_page;
+            if($fileExtension === 'txt') {
+                $user->file = $filePath;
+            } else {
+                $user->image = $filePath;
+            }
             $user->save();
         }
 

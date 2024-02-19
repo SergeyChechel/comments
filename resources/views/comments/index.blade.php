@@ -33,7 +33,14 @@
             <tbody>
                 @foreach ($comments as $comment)
                     <tr class="comment">
-                        <td>{{ $comment->user->name }}</td>
+                        <td class="user-data">
+                            <span class="user-pic">
+                                @if($comment->user->image) 
+                                    <img src="{{ asset($comment->user->image) }}" style="width: 65px"; alt="Изображение пользователя">
+                                @endif
+                            </span>
+                            <span class="user-name">{{ $comment->user->name }}</span>
+                        </td>
                         <td class="comment-text">
                             <span>{!! strip_tags($comment->content, '<a><code><i><strong>') !!}</span>
                             <div>
@@ -113,9 +120,20 @@
         margin-top: 10px;
     }
     svg {
-    width: 1em;
-    height: 1em;
-}
+        width: 1em;
+        height: 1em;
+    }
+    .user-data {
+        display: flex;
+        width: 10em;
+    }
+    .user-data .user-name {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+    /* .user-data .user-pic {
+        min-width: 75px;
+    } */
 
 
 </style>
@@ -160,9 +178,9 @@
             $(this).find('.comment-text').width(containerWidth * 0.5);
         });
 
-        $('th, td', this).width(function() {
-            return $(this).width() * 1.2;
-        });
+        // $('th, td', this).width(function() {
+        //     return $(this).width() * 1.2;
+        // });
 
         $('.add-comment button').click(function(){
         $.ajax({
