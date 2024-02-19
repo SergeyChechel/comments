@@ -37,7 +37,8 @@ class ReplyController extends Controller
             'email' => 'required|email',
             'home_page' => 'nullable|url',
             'text' => ['required', 'not_regex:/<(?!\/?(a|code|i|strong)\b)[^>]*>/'],
-            'captcha' => 'required|captcha'
+            'captcha' => 'required|captcha',
+            // 'image_or_file' => 'nullable|file|mimes:jpeg,png,gif,txt|max:1024',
         ]);
 
         if ($validator->fails()) {

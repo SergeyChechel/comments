@@ -21,55 +21,55 @@
         </div>
     @endif
 
-    <table>
-        <thead>
-            <tr>
-                <th>Пользователь</th>
-                <th>Комментарий</th>
-                <th>Добавлен</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($comments as $comment)
-                <tr class="comment">
-                    <td>{{ $comment->user->name }}</td>
-                    <td class="comment-text">
-                        <span>{!! strip_tags($comment->content, '<a><code><i><strong>') !!}</span>
-                        <div>
-                            <a href="#" class="reply-link">Ответить</a>
-                            @if ($comment->replies->isNotEmpty())
-                                <a href="#" class="show-replies">Посмотреть ответы</a>
-                            @endif
-                            <div class="reply-form" style="display: none;">
-                                @include('comments.form', ['comment' => $comment])
-                            </div>
-                            @if ($comment->replies->isNotEmpty())
-                                <ul class="replies" style="display: none;">
-                                    @foreach ($comment->replies as $reply)
-                                        @php
-                                            $commentt = \App\Models\Comment::with('replies')->findOrFail($reply->reply_id);
-                                        @endphp
-                                        @include('comments.comment', ['comment' => $commentt])
-                                    @endforeach
-                                </ul>
-                            @endif
-                        </div>
-                    </td>
-                    <td style="margin-bottom: 10px;">{{ $comment->created_at }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
     @if($comments->count())
-    <nav class="navi">
-        {{ $comments->links() }}
-    </nav>
-@endif
+        <table>
+            <thead>
+                <tr>
+                    <th>Пользователь</th>
+                    <th>Комментарий</th>
+                    <th>Добавлен</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($comments as $comment)
+                    <tr class="comment">
+                        <td>{{ $comment->user->name }}</td>
+                        <td class="comment-text">
+                            <span>{!! strip_tags($comment->content, '<a><code><i><strong>') !!}</span>
+                            <div>
+                                <a href="#" class="reply-link">Ответить</a>
+                                @if ($comment->replies->isNotEmpty())
+                                    <a href="#" class="show-replies">Посмотреть ответы</a>
+                                @endif
+                                <div class="reply-form" style="display: none;">
+                                    @include('comments.form', ['comment' => $comment])
+                                </div>
+                                @if ($comment->replies->isNotEmpty())
+                                    <ul class="replies" style="display: none;">
+                                        @foreach ($comment->replies as $reply)
+                                            @php
+                                                $commentt = \App\Models\Comment::with('replies')->findOrFail($reply->reply_id);
+                                            @endphp
+                                            @include('comments.comment', ['comment' => $commentt])
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </div>
+                        </td>
+                        <td style="margin-bottom: 10px;">{{ $comment->created_at }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <nav class="navi">
+            {{ $comments->links() }}
+        </nav>
+    @endif
 </div>
 
 <style>
     .container {
-        width: 80%;
+        /* width: 80%; */
         max-width: 1000px;
     }
     .alert {
@@ -113,8 +113,8 @@
         margin-top: 10px;
     }
     svg {
-    width: 1em; /* Задайте желаемую ширину */
-    height: 1em; /* Задайте желаемую высоту */
+    width: 1em;
+    height: 1em;
 }
 
 
