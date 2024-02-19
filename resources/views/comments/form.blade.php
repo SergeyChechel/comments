@@ -5,7 +5,7 @@
     action="{{ route('comments.replies.store', ['comment' => $comment->id]) }}"
     @endif
     enctype="multipart/form-data"
-    onsubmit="checkForm(e)"
+    onsubmit="checkForm(event)"
 >
     @csrf
     <div>
@@ -36,6 +36,7 @@
     <div>
         <label for="image_or_file">Image or File:</label>
         <input type="file" id="image_or_file" name="image_or_file" accept=".jpg, .jpeg, .gif, .png, .txt" required title="разрешены только файлы JPG, GIF, PNG и TXT" onchange="handleFile()">
+        {{--  --}}
     </div>
     @if(Route::currentRouteName() === 'comments.index')
         <input type="hidden" name="parent_id" value="{{$comment->id}}">
@@ -46,12 +47,12 @@
 <script>
     let formData;
 
-    function checkForm(e) {
+    function checkForm(event) {
         debugger;
-        e.preventDefault();
-        if(checkHTMLTags()) {
+        event.preventDefault(); // Предотвращаем отправку формы по умолчанию
+        if (checkHTMLTags()) {
             mixFormData(formData);
-        };
+        }
     }
 
     function checkHTMLTags() {
