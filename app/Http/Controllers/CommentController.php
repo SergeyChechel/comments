@@ -20,7 +20,7 @@ class CommentController extends Controller
         ->with('user')
         ->where('is_reply', false)
         ->latest()
-        ->get();
+        ->paginate(3);
         return view('comments.index', compact('comments'));
     }
 

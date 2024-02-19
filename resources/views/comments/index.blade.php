@@ -60,6 +60,11 @@
             @endforeach
         </tbody>
     </table>
+    @if($comments->count())
+    <nav class="navi">
+        {{ $comments->links() }}
+    </nav>
+@endif
 </div>
 
 <style>
@@ -107,6 +112,11 @@
         margin-bottom: 5px;
         margin-top: 10px;
     }
+    svg {
+    width: 1em; /* Задайте желаемую ширину */
+    height: 1em; /* Задайте желаемую высоту */
+}
+
 
 </style>
 
