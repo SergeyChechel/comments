@@ -36,7 +36,9 @@
                         <td class="user-data">
                             <span class="user-pic">
                                 @if($comment->user->image) 
-                                    <img src="{{ asset($comment->user->image) }}" style="width: 65px"; alt="Изображение пользователя">
+                                    <img src="{{ asset('storage/'. str_replace('public/', '', $comment->user->image)) }}" style="width: 65px"; alt="Изображение пользователя">
+                                @elseif($comment->user->file)
+                                    <img src="{{ asset('storage/icon-text-file.png') }}" style="width: 65px"; alt="Изображение пользователя">
                                 @endif
                             </span>
                             <span class="user-name">{{ $comment->user->name }}</span>

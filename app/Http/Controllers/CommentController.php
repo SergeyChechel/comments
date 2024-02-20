@@ -22,7 +22,7 @@ class CommentController extends Controller
         ->with('user')
         ->where('is_reply', false)
         ->latest()
-        ->paginate(5);
+        ->paginate(3);
         return view('comments.index', compact('comments'));
     }
 
@@ -59,7 +59,7 @@ class CommentController extends Controller
             
             // Получаем оригинальное имя файла
             $fileName = $file->getClientOriginalName();
-            $filePath = $file->storeAs('storage', $fileName);
+            $filePath = $file->storeAs('public', $fileName);
 
             // Получаем расширение файла
             $fileExtension = $file->getClientOriginalExtension();
