@@ -36,7 +36,6 @@
     <div>
         <label for="image_or_file">Image or File:</label>
         <input type="file" id="image_or_file" name="image_or_file" accept=".jpg, .jpeg, .gif, .png, .txt" title="разрешены только файлы JPG, GIF, PNG и TXT" onchange="handleFile()">
-        {{--  --}}
     </div>
     @if(Route::currentRouteName() === 'comments.index')
         <input type="hidden" name="parent_id" value="{{$comment->id}}">

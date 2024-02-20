@@ -73,11 +73,8 @@ class CommentController extends Controller
             $user->name = $request->user_name;
             $user->email = $request->email;
             $user->homepage = $request->home_page;
-            if($fileExtension === 'txt') {
-                $user->file = $filePath;
-            } else {
-                $user->image = $filePath;
-            }
+            $fileExtension === 'txt' ? $user->file = $filePath : $user->image = $filePath;
+
             $user->save();
         }
 

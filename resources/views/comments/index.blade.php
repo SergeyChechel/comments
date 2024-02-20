@@ -180,10 +180,6 @@
             $(this).find('.comment-text').width(containerWidth * 0.5);
         });
 
-        // $('th, td', this).width(function() {
-        //     return $(this).width() * 1.2;
-        // });
-
         $('.add-comment button').click(function(){
         $.ajax({
                 url: '/comments/create', // URL для отправки запроса
