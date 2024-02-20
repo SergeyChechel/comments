@@ -35,7 +35,7 @@
     </div>
     <div>
         <label for="image_or_file">Image or File:</label>
-        <input type="file" id="image_or_file" name="image_or_file" accept=".jpg, .jpeg, .gif, .png, .txt" required title="разрешены только файлы JPG, GIF, PNG и TXT" onchange="handleFile()">
+        <input type="file" id="image_or_file" name="image_or_file" accept=".jpg, .jpeg, .gif, .png, .txt" title="разрешены только файлы JPG, GIF, PNG и TXT" onchange="handleFile()">
         {{--  --}}
     </div>
     @if(Route::currentRouteName() === 'comments.index')
@@ -77,11 +77,10 @@
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     const img = new Image();
-                    img.src = event.target.result;
                     img.onload = function() {
                         let width = img.width;
                         let height = img.height;
-                        
+
                         // Если размер изображения больше 320x240, уменьшаем его пропорционально
                         if (width > 320 || height > 240) {
                             const ratio = Math.min(320 / width, 240 / height);
@@ -93,31 +92,33 @@
                             const ctx = canvas.getContext('2d');
                             canvas.width = width;
                             canvas.height = height;
-                            
+
                             // Рисуем изображение на canvas с новыми размерами
                             ctx.drawImage(img, 0, 0, width, height);
-                            
-                            // Получаем измененное изображение в формате data URL
-                            const resizedImg = canvas.toDataURL('image/jpeg');
 
-                            // Создаем скрытый input для сжатого изображения
-                            const compressedFile = dataURLtoFile(resizedImg, fileName);
-                            const fileList = new DataTransfer();
-                            fileList.items.add(compressedFile);
+                            // Получаем измененное изображение в формате Blob
+                            canvas.toBlob(function(blob) {
+                                // Создаем скрытый input для сжатого изображения
+                                const compressedFile = new File([blob], file.name, { type: 'image/jpeg' });
+                                const fileList = new DataTransfer();
+                                fileList.items.add(compressedFile);
 
-                            const compressedInput = document.createElement('input');
-                            compressedInput.type = 'file';
-                            compressedInput.name = 'image_or_file';
-                            compressedInput.files = fileList.files;
-                            fileInput.parentNode.appendChild(compressedInput);
+                                const compressedInput = document.createElement('input');
+                                compressedInput.type = 'file';
+                                compressedInput.name = 'image_or_file';
+                                compressedInput.files = fileList.files;
+                                fileInput.parentNode.appendChild(compressedInput);
 
-                            // Удаляем оригинальный input
-                            fileInput.parentNode.removeChild(fileInput);
+                                // Удаляем оригинальный input
+                                fileInput.parentNode.removeChild(fileInput);
+                            }, 'image/jpeg');
                         }
                     };
+
+                    // Загружаем изображение из объекта FileReader
+                    img.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
-
             } else {
                 alert('Допускаются только файлы изображения и текста');
                 fileInput.value = '';
@@ -125,19 +126,5 @@
             }
         }
     }
-
-    // Вспомогательная функция для преобразования data URL в файл
-    function dataURLtoFile(dataurl, filename) {
-        const arr = dataurl.split(',');
-        const mime = arr[0].match(/:(.*?);/)[1];
-        const bstr = atob(arr[1]);
-        let n = bstr.length;
-        const u8arr = new Uint8Array(n);
-        while (n--) {
-            u8arr[n] = bstr.charCodeAt(n);
-        }
-        return new File([u8arr], filename, { type: mime });
-    }
-   
 
 </script>
