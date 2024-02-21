@@ -17,7 +17,8 @@ To run this project locally, follow these steps:
 2. Run the MySQL server locally using default settings (for example in a Docker container)
 3. Navigate to the project directory: cd project-name
 4. Install dependencies using Composer: composer install
-5. In the file .env in the root of the project directory, specify the desired name of DB and configure the parameters for connecting to the database on the MySQL server
-6. In the root project directory run database migrations command: php artisan migrate. This creates DB, specified above, on the MySQL server
-7. Serve the application using the built-in development server. Run command: php artisan serve.
-8. Follow the link in the terminal.
+5. Copy the .env.example file to .env: cp .env.example .env
+6. In the file .env in the root of the project directory, specify the desired name of DB and configure the parameters for connecting to the database on the MySQL server
+7. In the root project directory run database migrations command: php artisan migrate. This creates DB, specified above, on the MySQL server
+8. Serve the application using the built-in development server. Run command: php artisan serve.
+9. Follow the link in the terminal.
