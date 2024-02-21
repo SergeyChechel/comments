@@ -54,17 +54,16 @@ class CommentController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        $fileExtension = null;
+
         if ($request->hasFile('image_or_file')) {
             // Получаем файл из запроса
             $file = $request->file('image_or_file');
-            
             // Получаем оригинальное имя файла
             $fileName = $file->getClientOriginalName();
             $filePath = $file->storeAs('public', $fileName);
-
             // Получаем расширение файла
             $fileExtension = $file->getClientOriginalExtension();
-            
         }
 
         $user = User::where('email', $request->email)->first();
@@ -74,7 +73,9 @@ class CommentController extends Controller
             $user->name = $request->user_name;
             $user->email = $request->email;
             $user->homepage = $request->home_page;
-            $fileExtension === 'txt' ? $user->file = $filePath : $user->image = $filePath;
+            if ($fileExtension) {
+                $fileExtension === 'txt' ? $user->file = $filePath : $user->image = $filePath;
+            } 
             $user->save();
         }
 
