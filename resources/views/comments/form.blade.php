@@ -1,9 +1,5 @@
 <form id="mainForm" method="POST" 
-    @if(Route::currentRouteName() === 'comments.create')
     action="{{ route('comments.store') }}"
-    @elseif(Route::currentRouteName() === 'comments.index')
-    action="{{ route('comments.replies.store', ['comment' => $comment->id]) }}"
-    @endif
     enctype="multipart/form-data"
     onsubmit="return checkHTMLTags()"
 >

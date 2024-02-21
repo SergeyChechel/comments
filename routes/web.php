@@ -15,18 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 Route::get('/', function () {
     return redirect()->route('comments.index');
 });
 
 Route::resource('comments', CommentController::class)
-->only(['index','show', 'store','create']);
-
-Route::resource('comments.replies', ReplyController::class)
 ->only(['index','show', 'store','create']);
 
 Route::get('/refresh-captcha', 'App\Http\Controllers\CaptchaController@refresh')->name('refresh-captcha');

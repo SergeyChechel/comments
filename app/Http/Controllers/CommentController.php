@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Reply;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManagerStatic as Image;
+
 
 class CommentController extends Controller
 {
@@ -47,6 +47,7 @@ class CommentController extends Controller
             'text' => ['required', 'not_regex:/<(?!\/?(a|code|i|strong)\b)[^>]*>/'],
             'captcha' => 'required|captcha',
             'image_or_file' => 'nullable|file|mimes:jpeg,png,gif,txt|max:1024',
+            'parent_id' => 'integer|exists:comments,id',
         ]);
 
         if ($validator->fails()) {
@@ -74,15 +75,25 @@ class CommentController extends Controller
             $user->email = $request->email;
             $user->homepage = $request->home_page;
             $fileExtension === 'txt' ? $user->file = $filePath : $user->image = $filePath;
-
             $user->save();
         }
 
         $comment = new Comment();
         $comment->user_id = $user->id;
         $comment->content = $request->text;
-        $comment->save();
+        
+        if ($request->parent_id) {
+            $comment->is_reply = true;
+            $comment->save();
 
+            $reply = new Reply();
+            $reply->comment_id = $request->parent_id;
+            $reply->reply_id = $comment->id;
+            $reply->save();
+        } else {
+            $comment->save();
+        }
+        
         return redirect()->route('comments.index')->with('success', 'Comment added successfully!');
     }
 

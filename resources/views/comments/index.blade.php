@@ -11,7 +11,7 @@
             {{ session('success') }}
         </div>
     @endif
-    @if ($errors->any())
+    @if($errors->any())
         <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
@@ -180,7 +180,7 @@
             $(this).find('.comment-text').width(containerWidth * 0.5);
         });
 
-        $('.add-comment button').click(function(){
+        $('.add-comment button').click(function() {
         $.ajax({
                 url: '/comments/create', // URL для отправки запроса
                 method: 'GET', // HTTP-метод
@@ -192,6 +192,7 @@
                 }
             });
         });
+        
     });
 
 
