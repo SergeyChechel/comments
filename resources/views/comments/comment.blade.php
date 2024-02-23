@@ -1,5 +1,4 @@
 <li class="comment">
-
     <div class="tr comment">
         <div class="td user-data">
             <span class="user-pic nested">
@@ -37,8 +36,3 @@
         </div>
     </div>
 </li>
-
-
-
-
-
