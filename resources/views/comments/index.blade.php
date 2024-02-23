@@ -22,34 +22,32 @@
     @endif
 
     @if($comments->count())
-        <table>
-            <thead>
-                <tr>
-                    <th>Пользователь</th>
-                    <th>Комментарий</th>
-                    <th>Добавлен</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="table">
+            <div class="tbody">
                 @foreach ($comments as $comment)
-                    <tr class="comment">
-                        <td class="user-data">
+                    <div class="tr comment">
+                        <div class="td user-data">
                             <span class="user-pic">
                                 @if($comment->user->image) 
-                                    <img src="{{ asset('storage/'. str_replace('public/', '', $comment->user->image)) }}" style="width: 65px"; alt="Изображение пользователя">
+                                    <img src="{{ asset('storage/'. str_replace('public/', '', $comment->user->image)) }}" alt="Изображение пользователя" width="45" height="45">
                                 @elseif($comment->user->file)
-                                    <img src="{{ asset('storage/icon-text-file.png') }}" style="width: 65px"; alt="Изображение пользователя">
+                                    <img class="txt" src="{{ asset('storage/icon-text-file.png') }}" alt="Изображение пользователя" width="45" height="45">
                                 @endif
                             </span>
                             <span class="user-name">{{ $comment->user->name }}</span>
-                        </td>
-                        <td class="comment-text">
+                            <span class="td date">
+                                {{ $comment->created_at->format('d.m.Y \в H:i') }}
+                            </span>
+                        </div>
+                        <div class="td comment-text">
                             <span>{!! strip_tags($comment->content, '<a><code><i><strong>') !!}</span>
                             <div>
-                                <a href="#" class="reply-link">Ответить</a>
-                                @if ($comment->replies->isNotEmpty())
-                                    <a href="#" class="show-replies">Посмотреть ответы</a>
-                                @endif
+                                <div class="ctrls">
+                                    @if ($comment->replies->isNotEmpty())
+                                        <button class="show-replies hidd">Посмотреть ответы</button>
+                                    @endif
+                                    <button class="reply-link">Ответить</button>
+                                </div>
                                 <div class="reply-form" style="display: none;">
                                     @include('comments.form', ['comment' => $comment])
                                 </div>
@@ -57,19 +55,18 @@
                                     <ul class="replies" style="display: none;">
                                         @foreach ($comment->replies as $reply)
                                             @php
-                                                $commentt = \App\Models\Comment::with('replies')->findOrFail($reply->reply_id);
+                                                $commentt = \App\Models\Comment::with('replies')->with('user')->findOrFail($reply->reply_id);
                                             @endphp
                                             @include('comments.comment', ['comment' => $commentt])
                                         @endforeach
                                     </ul>
                                 @endif
                             </div>
-                        </td>
-                        <td style="margin-bottom: 10px;">{{ $comment->created_at }}</td>
-                    </tr>
+                        </div>
+                    </div>
                 @endforeach
-            </tbody>
-        </table>
+            </div>
+        </div>
         <nav class="navi">
             {{ $comments->links() }}
         </nav>
@@ -77,9 +74,18 @@
 </div>
 
 <style>
+    .hidden {
+        display: none
+    }
     .container {
-        /* width: 80%; */
         max-width: 1000px;
+        margin: 0 auto;
+    }
+    ul {
+        list-style-type: none;
+    }
+    button {
+        margin-left: 5px;
     }
     .alert {
         margin-bottom: 10px;
@@ -99,7 +105,7 @@
         display: flex;
         justify-content: flex-start;
         align-items: flex-start;
-        margin-bottom: 20px;
+        margin-bottom: 40px;
     }
     .add-comment button {
         font-weight: bold;
@@ -108,14 +114,31 @@
     .add-comment h2 {
         margin-top: 9px;
     }
-    table th {
-        text-align: left;
+
+    .table .tr {
+        /* display: flex; */
+        margin: 10px 0 10px;
     }
-    table td {
-        vertical-align: top;
+    .thead .tr:first-of-type {
+        margin: 30px 0 20px;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+    .table .th {
+        text-align: left;
+        /* width: 33%; */
     }
     tr.comment {
         height: 1.2em;
+    }
+    .comment-text .ctrls {
+        text-align: end;
+    }
+    .comment-text span {
+        display: inline-block;
+    }
+    .comment-text > span {
+        margin: 15px 0 15px;
     }
     .comment p {
         margin-bottom: 5px;
@@ -127,15 +150,54 @@
     }
     .user-data {
         display: flex;
-        width: 10em;
+        align-items: center;
+        background: #d3d3d347;
+    }
+    .user-pic img {
+        width: 45px;
+        height: 45px;
+        border: 2px solid white;
+        margin: 5px;
     }
     .user-data .user-name {
+        font-weight: bold;
         margin-right: 10px;
         margin-left: 10px;
     }
-    /* .user-data .user-pic {
-        min-width: 75px;
-    } */
+    .user-data .date {
+        font-size: 14px;
+    }
+    .user-pic img:not(.txt) {
+        border-radius: 50%;
+    }
+    .navi nav div:first-of-type {
+        text-align: center;
+    }
+    .navi nav div:first-of-type span, 
+    .navi nav div:first-of-type a {
+        margin: 15px;
+    }
+    form label {
+        display: inline-block;
+        min-width: 100px;
+    }
+    form .captcha-label {
+        float: left;
+    }
+    form .wrap {
+        width: 30%;
+        float: left;
+        margin-left: 4px; 
+    }   
+    .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+        margin-bottom: 10px;
+    } 
+    .cancel {
+        margin-left: 15px;
+    }
 
 
 </style>
@@ -157,27 +219,24 @@
     // Обработчик события клика по кнопке "Обновить CAPTCHA"
     document.querySelectorAll('.reply-link').forEach(function(link) {
         link.addEventListener('click', function(e) {
-            refreshCaptcha(e.target);
+            refreshCaptcha(e.target.parentElement);
         });
     });
 
     $(document).ready(function(){
         $('.reply-link').click(function(){
-            $(this).siblings('.reply-form').first().toggle();
+            $(this).parent().siblings('.reply-form').first().toggle();
         });
 
         $('.show-replies').click(function(e){
-            e.preventDefault();
-            $(this).siblings('.replies').toggle();
-        });
+            if(e.target.classList.contains('hidd')) {
+                e.target.textContent = "Скрыть ответы";
+            } else {
+                e.target.textContent = "Просмотреть ответы";
+            }
+            e.target.classList.toggle('hidd');
 
-        $('tr.comment').each(function(){
-            var contentHeight = $(this).find('td').height(); // Получаем высоту контента в строке
-            var newHeight = contentHeight * 1.2; // Устанавливаем высоту строки на 120% от высоты контента
-            $(this).height(newHeight); // Устанавливаем новую высоту строки
-
-            var containerWidth = $('.container').width();
-            $(this).find('.comment-text').width(containerWidth * 0.5);
+            $(this).parent().siblings('.replies').toggle();
         });
 
         $('.add-comment button').click(function() {

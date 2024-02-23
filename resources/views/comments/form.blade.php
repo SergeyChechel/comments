@@ -17,14 +17,18 @@
         <input type="url" id="home_page" name="home_page" value="{{ old('home_page') }}">
     </div>
     <div>
-        <label for="captcha">CAPTCHA:</label>
-        @if(Route::currentRouteName() === 'comments.create')
-            <img src="{{ Captcha::src() }}" alt="CAPTCHA">
-        @elseif(Route::currentRouteName() === 'comments.index')
-            <img id="captcha-image" src="{{ asset('images/blank_captcha.png') }}" alt="CAPTCHA">
-        @endif
-        <input type="text" id="captcha" name="captcha" pattern="[a-zA-Z0-9]+" required>
+        <label for="captcha" class="captcha-label">CAPTCHA:</label>
+        <div class="wrap">
+            <input type="text" id="captcha" name="captcha" pattern="[a-zA-Z0-9]+" required>
+            @if(Route::currentRouteName() === 'comments.create')
+                <img class="captcha-image" src="{{ Captcha::src() }}" alt="CAPTCHA">
+            @elseif(Route::currentRouteName() === 'comments.index')
+                <img id="captcha-image" class="captcha-image" src="{{ asset('images/blank_captcha.png') }}" alt="CAPTCHA">
+            @endif
+
+        </div>
     </div>
+    <div class="clearfix"></div>
     <div>
         <label for="text">Text:</label>
         <textarea id="text" name="text" title="разрешенные теги только <a href=”” title=””></a> <code></code> <i></i> <strong></strong>" required>{{ old('text') }}</textarea>
@@ -37,9 +41,24 @@
         <input type="hidden" name="parent_id" value="{{$comment->id}}">
     @endif
     <button type="submit">Отправить</button>
+    <a href="" class="cancel" onclick="cancel(this)">Отменить</a>
 </form>
 
 <script>
+    function cancel(el) {
+        // debugger;
+        const form = el.closest('form');
+        const reply_form = form.querySelector('input[name="parent_id"]');
+        if(reply_form) {
+            form.closest('.reply-form').style.display = 'none';
+        } else {
+            const addComment = form.parentNode;
+            const button = document.createElement('button');
+            button.textContent = 'Добавить комментарий';
+            addComment.parentNode.replaceChild(button, addComment);
+        }
+    } 
+    
 
     function checkHTMLTags() {
         // debugger;
