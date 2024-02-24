@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'My Laravel App')</title>
+    <title>@yield('title', 'Comments')</title>
     <!-- Здесь можно добавить ссылки на ваши стили и скрипты -->
     {{-- <link rel="stylesheet" href="{{ asset('css/app.css') }}"> --}}
     <style>
@@ -40,7 +40,8 @@
             align-items: flex-start;
             margin-bottom: 40px;
         }
-        .add-comment button {
+        .add-comment button,
+        .reply-form button {
             font-weight: bold;
             margin-top: 10px;
         }
@@ -49,8 +50,7 @@
         }
     
         .table .tr {
-            /* display: flex; */
-            margin: 10px 0 10px;
+            margin: 30px 0 30px;
         }
         .thead .tr:first-of-type {
             margin: 30px 0 20px;
@@ -85,6 +85,7 @@
             display: flex;
             align-items: center;
             background: #d3d3d347;
+            min-height: 63px;
         }
         .user-pic img {
             width: 45px;
@@ -110,6 +111,9 @@
         .navi nav div:first-of-type a {
             margin: 15px;
         }
+        form {
+            max-width: 60%;
+        }
         form label {
             display: inline-block;
             min-width: 100px;
@@ -120,7 +124,6 @@
         form .wrap {
             width: 30%;
             float: left;
-            margin-left: 4px; 
         }   
         .clearfix::after {
             content: "";
@@ -129,7 +132,14 @@
             margin-bottom: 10px;
         } 
         .cancel {
-            margin-left: 15px;
+            margin-left: 30px;
+        }
+        .tag-buttons {
+            display: inline-block;
+            margin: -7px 10px 7px 12px;
+        }
+        .image-or-file {
+            margin-top: 10px;
         }
     
     
@@ -144,6 +154,8 @@
 
     <!-- Здесь можно добавить ваши скрипты -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script> 
+
     <script>
         function cancel(e) {
             // debugger;
@@ -162,7 +174,7 @@
         
 
         function checkHTMLTags() {
-            // debugger;
+            debugger;
             const textContent = document.getElementById('text').value;
             const disallowedTagsRegex = /<(?!\/?(a|code|i|strong)\b)[^>]*>/g; // можно только <a href=”” title=””> </a> <code> </code> <i> </i> <strong> </strong>
             if (textContent.match(disallowedTagsRegex)) {
@@ -296,6 +308,31 @@
 
 
     </script>
+    <script>
+        const formWraps = document.querySelectorAll('.main-form-wrap');
+        formWraps.forEach(formWrap => {
+            Vue.createApp({
+                data() {
+                    return {
+                        text: ''
+                    };
+                },
+                methods: {
+                    insertTag(startTag, endTag) {
+                        const textarea = document.getElementById('text');
+                        const startPos = textarea.selectionStart;
+                        const endPos = textarea.selectionEnd;
+
+                        if(startTag === '<a>') {
+                            startTag = '<a href="" title="" target="_blank">'
+                        }
+                        this.text = this.text.substring(0, startPos) + startTag + this.text.substring(startPos, endPos) + endTag + this.text.substring(endPos);
+                    },
+                }
+            }).mount("#" + formWrap.id);
+        });
+    </script>
+    
     {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
 </body>
 </html>

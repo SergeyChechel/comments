@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
     <div class="header">
         <h1>Комментарии</h1>
         <div class="add-comment">
@@ -74,5 +73,4 @@
             {{ $comments->links() }}
         </nav>
     @endif
-</div>
 @endsection
