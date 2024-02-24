@@ -174,7 +174,7 @@
         
 
         function checkHTMLTags() {
-            debugger;
+            // debugger;
             const textContent = document.getElementById('text').value;
             const disallowedTagsRegex = /<(?!\/?(a|code|i|strong)\b)[^>]*>/g; // можно только <a href=”” title=””> </a> <code> </code> <i> </i> <strong> </strong>
             if (textContent.match(disallowedTagsRegex)) {
